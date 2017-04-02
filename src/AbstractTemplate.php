@@ -17,22 +17,13 @@ abstract class AbstractTemplate
 
     public function __toString()
     {
-        try {
-            if (!$this->preparedOnce) {
-                $this->prepareOnce();
-                $this->preparedOnce = true;
-            }
-            $this->prepare();
-
-            return $this->toString();
-        } catch (\Exception $exception) {
-            return 'Error: (' . $exception->getCode() . ') ' . $exception->getMessage()
-            . "\n" . $exception->getTraceAsString();
-        } catch (\Error $exception) {
-            return 'Error: (' . $exception->getCode() . ') ' . $exception->getMessage()
-            . "\n" . $exception->getTraceAsString();
-
+        if (!$this->preparedOnce) {
+            $this->prepareOnce();
+            $this->preparedOnce = true;
         }
+        $this->prepare();
+
+        return $this->toString();
     }
 
 
@@ -48,6 +39,10 @@ abstract class AbstractTemplate
             }
         }
         return implode("\n", $lines);
+    }
+
+    public function tabLines($text) {
+        return $this->padLines("\t", $text, false);
     }
 
     public function trimLines($text)
