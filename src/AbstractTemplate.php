@@ -41,7 +41,7 @@ abstract class AbstractTemplate
         return implode("\n", $lines);
     }
 
-    public function tabLines($text) {
+    public function indentLines($text) {
         return $this->padLines("\t", $text, false);
     }
 
