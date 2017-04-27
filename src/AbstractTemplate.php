@@ -7,6 +7,7 @@ abstract class AbstractTemplate
     abstract protected function toString();
 
     private $preparedOnce = false;
+
     protected function prepareOnce()
     {
     }
@@ -15,7 +16,10 @@ abstract class AbstractTemplate
     {
     }
 
-    public function __toString()
+    /**
+     * @return string
+     */
+    public function render()
     {
         if (!$this->preparedOnce) {
             $this->prepareOnce();
@@ -24,6 +28,17 @@ abstract class AbstractTemplate
         $this->prepare();
 
         return $this->toString();
+    }
+
+    public function __toString()
+    {
+        try {
+            return $this->render();
+        } catch (\ErrorException $e) {
+            return $e->getTraceAsString();
+        } catch (\Exception $e) {
+            return $e->getTraceAsString();
+        }
     }
 
 
@@ -41,7 +56,8 @@ abstract class AbstractTemplate
         return implode("\n", $lines);
     }
 
-    public function indentLines($text) {
+    public function indentLines($text)
+    {
         return $this->padLines("\t", $text, false);
     }
 

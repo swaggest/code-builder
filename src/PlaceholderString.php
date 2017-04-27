@@ -21,7 +21,7 @@ class PlaceholderString extends AbstractTemplate
     }
 
 
-    public function toString()
+    protected function toString()
     {
         $replace = array();
         foreach ($this->binds as $name => $value) {

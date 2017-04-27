@@ -17,7 +17,7 @@ class ClosureString extends AbstractTemplate
         $this->closure = $closure;
     }
 
-    public function toString()
+    protected function toString()
     {
         try {
             $result = $this->closure->__invoke();
