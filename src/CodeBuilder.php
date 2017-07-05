@@ -119,6 +119,7 @@ abstract class CodeBuilder
     }
 
     protected $originalFiles = array();
+    public $ignoreFiles = array();
 
     protected function realSrcPath($srcPath)
     {
@@ -140,6 +141,13 @@ abstract class CodeBuilder
 
         foreach ($this->files as $filename => $content) {
             $options = isset($this->options[$filename]) ? $this->options[$filename] : null;
+
+            foreach ($this->ignoreFiles as $pattern) {
+                if (self::starMatch($pattern, $filename)) {
+                    $this->log->push("Skipping $filename write by $pattern ignore");
+                    continue 2;
+                }
+            }
 
             $this->log->push("Storing $filename");
             $path = $srcPath . '/' . trim($filename, '/');
@@ -197,7 +205,19 @@ abstract class CodeBuilder
             file_put_contents($path, $content);
         }
 
+        $cwd = getcwd();
+        $cwdlen = strlen($cwd);
         foreach ($this->originalFiles as $originalFile) {
+            if (substr($originalFile, 0, $cwdlen) === $cwd) {
+                $originalFile = substr($originalFile, $cwdlen + 1);
+            }
+            foreach ($this->ignoreFiles as $pattern) {
+                if (self::starMatch($pattern, $originalFile)) {
+                    $this->log->push("Skipping $originalFile delete by $pattern ignore");
+                    continue 2;
+                }
+            }
+
             $this->log->push("Removing redundant $originalFile");
             unlink($originalFile);
         }
