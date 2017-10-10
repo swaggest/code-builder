@@ -166,7 +166,19 @@ abstract class CodeBuilder
 
             if ($options) {
                 $this->log->push("Options found");
+
+                if ($options->callback) {
+                    $content = $options->callback->__invoke($content, $path, $srcPath);
+                    if ($content === false) {
+                        continue;
+                    }
+                }
+
                 if ($options->skip) {
+                    if ($options->deleteIfExists && file_exists($path)) {
+                        $this->log->push("Deleting existing by option");
+                        unlink($path);
+                    }
                     $this->log->push("Skipping by option");
                     continue;
                 }

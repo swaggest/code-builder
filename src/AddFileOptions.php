@@ -8,6 +8,9 @@ class AddFileOptions extends BaseClass
 {
     public $skipIfExists = false;
 
+    /** @var \Closure params: $content, $filePath, $srcPath; return $content|false */
+    public $callback;
+
     /** @var \Closure params: $new, $old, returns $merged  */
     public $mergeCallback;
     
@@ -16,6 +19,16 @@ class AddFileOptions extends BaseClass
     public $skip = false;
 
     public $mustBeNotEmpty = false;
+
+    /**
+     * @param \Closure $callback
+     * @return AddFileOptions
+     */
+    public function setCallback($callback)
+    {
+        $this->callback = $callback;
+        return $this;
+    }
 
     /**
      * @param \Closure $mergeCallback
@@ -57,7 +70,14 @@ class AddFileOptions extends BaseClass
         return $this;
     }
 
-
-
+    /**
+     * @param boolean $skip
+     * @return AddFileOptions
+     */
+    public function setSkip($skip)
+    {
+        $this->skip = $skip;
+        return $this;
+    }
 
 }
