@@ -35,9 +35,9 @@ abstract class AbstractTemplate
         try {
             return $this->render();
         } catch (\ErrorException $e) {
-            return $e->getTraceAsString();
+            return $e->getMessage() . "\n" . $e->getTraceAsString();
         } catch (\Exception $e) {
-            return $e->getTraceAsString();
+            return $e->getMessage() . "\n" . $e->getTraceAsString();
         }
     }
 
