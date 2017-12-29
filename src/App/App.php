@@ -5,6 +5,8 @@ namespace Swaggest\CodeBuilder\App;
 
 class App
 {
+    protected $files = array();
+
     protected $storedFilesList = array();
 
     protected function getAbsoluteFilename($filename)
@@ -26,7 +28,7 @@ class App
             }
         }
 
-        return '/' . join('/', $path);
+        return (DIRECTORY_SEPARATOR === '\\' ? '' : '/') . join('/', $path);
     }
 
     protected function putContents($filepath, $content) {
@@ -45,4 +47,37 @@ class App
         }
         file_put_contents($filepath, $content);
     }
+
+    public function store($path)
+    {
+        if (DIRECTORY_SEPARATOR === '\\') {
+            $path = str_replace('\\', '/', $path);
+        }
+
+        $path = rtrim($path, '/') . '/';
+
+        foreach ($this->files as $filepath => $contents) {
+            $this->putContents($path . $filepath, $contents);
+        }
+
+        $this->clearOldFiles($path);
+    }
+
+    public function clearOldFiles($path)
+    {
+        $rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \FilesystemIterator::UNIX_PATHS));
+
+        /** @var \RecursiveDirectoryIterator $file */
+        foreach ($rii as $file) {
+            if ($file->isDir()) {
+                continue;
+            }
+
+            $filepath = $this->getAbsoluteFilename($file->getPathname());
+            if (!isset($this->storedFilesList[$filepath])) {
+                unlink($filepath);
+            }
+        }
+    }
+
 }
