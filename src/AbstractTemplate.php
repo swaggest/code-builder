@@ -72,4 +72,18 @@ abstract class AbstractTemplate
         return implode("\n", $lines);
     }
 
+    private $meta;
+    public function addMeta($data, $name = null)
+    {
+        if ($name === null && is_object($data)) {
+            $name = get_class($data);
+        }
+        $this->meta[$name] = $data;
+        return $this;
+    }
+
+    public function getMeta($name)
+    {
+        return isset($this->meta[$name]) ? $this->meta[$name] : null;
+    }
 }
