@@ -67,15 +67,31 @@ class App
     {
         $rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \FilesystemIterator::UNIX_PATHS));
 
+        $dirsToCheck = [];
+
         /** @var \RecursiveDirectoryIterator $file */
         foreach ($rii as $file) {
             if ($file->isDir()) {
+                $dirsToCheck[dirname($file->getPathname())] = true;
                 continue;
             }
 
             $filepath = $this->getAbsoluteFilename($file->getPathname());
             if (!isset($this->storedFilesList[$filepath])) {
                 unlink($filepath);
+            }
+        }
+
+
+        // removing empty dirs
+        krsort($dirsToCheck);
+        foreach ($dirsToCheck as $dir => $tmp) {
+            if (!file_exists($dir)) {
+                continue;
+            }
+            $s = scandir($dir);
+            if (count($s) == 2) {
+                rmdir($dir);
             }
         }
     }
