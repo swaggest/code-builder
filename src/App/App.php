@@ -65,6 +65,9 @@ class App
 
     public function clearOldFiles($path)
     {
+        if (!file_exists($path)) {
+            return;
+        }
         $rii = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path, \FilesystemIterator::UNIX_PATHS));
 
         $dirsToCheck = [];
