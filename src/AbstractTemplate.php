@@ -35,9 +35,9 @@ abstract class AbstractTemplate
         try {
             return $this->render();
         } catch (\ErrorException $e) {
-            return $e->getTraceAsString();
+            return $e->getMessage() . "\n" . $e->getTraceAsString();
         } catch (\Exception $e) {
-            return $e->getTraceAsString();
+            return $e->getMessage() . "\n" . $e->getTraceAsString();
         }
     }
 
@@ -72,4 +72,18 @@ abstract class AbstractTemplate
         return implode("\n", $lines);
     }
 
+    private $meta;
+    public function addMeta($data, $name = null)
+    {
+        if ($name === null && is_object($data)) {
+            $name = get_class($data);
+        }
+        $this->meta[$name] = $data;
+        return $this;
+    }
+
+    public function getMeta($name)
+    {
+        return isset($this->meta[$name]) ? $this->meta[$name] : null;
+    }
 }
