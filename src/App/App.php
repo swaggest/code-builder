@@ -35,6 +35,9 @@ class App
         $filepath = $this->getAbsoluteFilename($filepath);
         $this->storedFilesList[$filepath] = $filepath;
 
+        // Rendering content only once.
+        $content = (string)$content;
+
         if (file_exists($filepath)) {
             $original = file_get_contents($filepath);
             if ($original == $content) {
@@ -43,7 +46,7 @@ class App
         }
         $dir = dirname($filepath);
         if (!file_exists($dir)) {
-            mkdir($dir, 0777, true);
+            mkdir($dir, 0750, true);
         }
         file_put_contents($filepath, $content);
     }
