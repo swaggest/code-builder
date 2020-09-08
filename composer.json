@@ -1,7 +1,7 @@
 {
   "name": "swaggest/code-builder",
   "type": "library",
-  "description": "GO code generation library",
+  "description": "Code generation library",
   "keywords": ["library"],
   "homepage": "https://github.com/swaggest/code-builder",
   "license": "MIT",
