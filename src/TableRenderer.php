@@ -16,10 +16,17 @@ class TableRenderer extends Hardcoded implements Renderer
     private $headRowDelimiter;
     private $headColDelimiter;
     private $outlineVertical;
+    private $stripEmptyCols = false;
 
     public function __construct(\Iterator $rows)
     {
         $this->rowsIterator = $rows;
+    }
+
+    public function stripEmptyColumns()
+    {
+        $this->stripEmptyCols = true;
+        return $this;
     }
 
     public function setColDelimiter($delimiter = '   ')
@@ -75,6 +82,7 @@ class TableRenderer extends Hardcoded implements Renderer
 
     private $lines = array();
     private $length = array();
+    private $maxValueLength = array();
     private $keys = array();
     private $rows = array();
     private $rowDelimiterLine;
@@ -91,6 +99,9 @@ class TableRenderer extends Hardcoded implements Renderer
                     $stringLength = strlen($line->text->value);
                     if (!isset($this->length[$key]) || $this->length[$key] < $stringLength) {
                         $this->length[$key] = $stringLength;
+                    }
+                    if ($rowIndex > 0 && (!isset($this->maxValueLength[$key]) || $this->maxValueLength[$key] < $stringLength)) {
+                        $this->maxValueLength[$key] = $stringLength;
                     }
                     $this->lines [$rowIndex][$lineIndex][$key] = $line;
                 }
@@ -139,6 +150,10 @@ class TableRenderer extends Hardcoded implements Renderer
     {
         $line = '';
         foreach ($this->length as $key => $maxLength) {
+            if ($this->stripEmptyCols && empty($this->maxValueLength[$key])) {
+                continue;
+            }
+
             /** @var \Yaoi\Cli\View\Text $value */
             $value = isset($row[$key]) ? $row[$key] : null;
 
