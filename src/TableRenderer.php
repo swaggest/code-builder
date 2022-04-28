@@ -91,12 +91,15 @@ class TableRenderer extends Hardcoded implements Renderer
     {
         foreach ($this->rows as $rowIndex => $row) {
             foreach ($row as $key => $value) {
+                if (!isset($value)) {
+                    $value = '';
+                }
                 if (!$value instanceof Content\Text) {
                     $value = new Content\Text($value);
                 }
                 $renderer = new Text($value);
                 foreach ($renderer->lines() as $lineIndex => $line) {
-                    $stringLength = strlen($line->text->value);
+                    $stringLength = isset($line->text->value) ? strlen($line->text->value) : 0;
                     if (!isset($this->length[$key]) || $this->length[$key] < $stringLength) {
                         $this->length[$key] = $stringLength;
                     }
