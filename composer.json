@@ -14,12 +14,10 @@
   ],
   "require": {
     "php": ">=5.4.0",
-    "psr/log": "^1.0.1",
     "php-yaoi/php-yaoi": "*"
   },
   "require-dev": {
-    "codeclimate/php-test-reporter": "0.1.2",
-    "phpunit/phpunit": "4.8.23"
+    "phperf/phpunit": "4.8.37"
   },
   "autoload": {
     "psr-4": {
@@ -33,5 +31,10 @@
   },
   "scripts": {
     "test": "php -dxdebug.coverage_enable=1 ./vendor/bin/phpunit --coverage-text"
+  },
+  "config": {
+    "platform": {
+      "php": "5.4.45"
+    }
   }
 }
