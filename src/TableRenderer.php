@@ -17,10 +17,16 @@ class TableRenderer extends Hardcoded implements Renderer
     private $headColDelimiter;
     private $outlineVertical;
     private $stripEmptyCols = false;
+    private $multilineCellDelimiter = null;
 
     public function __construct(\Iterator $rows)
     {
         $this->rowsIterator = $rows;
+    }
+
+    public function multilineCellDelimiter($s)
+    {
+        $this->multilineCellDelimiter = $s;
     }
 
     public function stripEmptyColumns()
@@ -97,8 +103,14 @@ class TableRenderer extends Hardcoded implements Renderer
                 if (!$value instanceof Content\Text) {
                     $value = new Content\Text($value);
                 }
+
+                if ($this->multilineCellDelimiter !== null) {
+                    $value->value = str_replace(["\r\n", "\n"], $this->multilineCellDelimiter, $value->value);
+                }
+
                 $renderer = new Text($value);
-                foreach ($renderer->lines() as $lineIndex => $line) {
+                $lines = $renderer->lines();
+                foreach ($lines as $lineIndex => $line) {
                     $stringLength = isset($line->text->value) ? strlen($line->text->value) : 0;
                     if (!isset($this->length[$key]) || $this->length[$key] < $stringLength) {
                         $this->length[$key] = $stringLength;

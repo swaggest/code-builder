@@ -18,8 +18,7 @@
     "php-yaoi/php-yaoi": "*"
   },
   "require-dev": {
-    "codeclimate/php-test-reporter": "0.1.2",
-    "phpunit/phpunit": "4.8.23"
+    "phperf/phpunit": "4.8.37"
   },
   "autoload": {
     "psr-4": {
