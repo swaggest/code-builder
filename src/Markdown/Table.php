@@ -20,6 +20,7 @@ class Table extends AbstractTemplate
             ->setColDelimiter('|')
             ->setHeadRowDelimiter('-')
             ->setOutlineVertical(true)
+            ->multilineCellDelimiter('<br>')
             ->setShowHeader();
     }
 }
