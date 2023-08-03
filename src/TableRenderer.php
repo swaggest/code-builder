@@ -27,6 +27,7 @@ class TableRenderer extends Hardcoded implements Renderer
     public function multilineCellDelimiter($s)
     {
         $this->multilineCellDelimiter = $s;
+        return $this;
     }
 
     public function stripEmptyColumns()
